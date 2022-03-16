@@ -1,0 +1,31 @@
+API'S - Application programming interface
+
+Application - Relates to web application
+             Programming Interface - The interface/connectivity between the two components of the web app (front end and back end)
+
+Usage - In ETL data pipe line, the processed data needs to flow from the processing stage(the backend) to the web app(front end) and vice versa
+
+Flask - used to create static python web application (static meaning - everytime the request are sent to the web server to execute, instead of 
+dynamic response web app like one created with javascript)
+
+Able to write API is must for data engineer. Understand the architecture the flow of data for various api calls. 
+The API's are structured in well organised manner.
+
+There is an end point associated with each part of the static web page. 
+/ --> home page end point
+/store/ --> stores end point [get(retrieve from store variable)]
+/store/<string:name>/ --> store name end point [get(retrieve from store variable) and post(add to store variable)]
+/store/<string:name>/item --> store [get and post]
+
+5 api calls from above.
+
+----
+pip3.5 install virtualenv
+
+virtualenv venv --python=python3.5
+
+source venv/bin/activate
+
+to deactivate user: deactivate
+
+python --version : returns system python
