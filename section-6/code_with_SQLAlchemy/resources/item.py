@@ -12,6 +12,11 @@ class Item(Resource):
         required=True,
         help="This field cannot be left blank!"
     )
+    parser.add_argument('store_id',
+        type=int,
+        required=True,
+        help="Items needs a store id"
+    )
 
     @jwt_required()
     def get(self, name):
@@ -26,8 +31,8 @@ class Item(Resource):
 
         data = Item.parser.parse_args()
 
-        item = ItemModel(name, **data)
-        # items.append(item) ---> only useful for case when items are in list, now we want to post item to database
+        item = ItemModel(name, data['price'], data['store_id'])
+        
         try:
             item.save_to_db()
         except:
@@ -49,9 +54,10 @@ class Item(Resource):
         # Once again, print something not in the args to verify everything works
         item = ItemModel.find_by_name(name)
         if item is None:
-            item = ItemModel(name, data['price'])
+            item = ItemModel(name,  **data)
         else:
             item.price = data['price']
+            item.store_id = data['store_id']
 
         item.save_to_db()
 
