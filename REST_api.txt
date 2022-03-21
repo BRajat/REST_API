@@ -29,3 +29,9 @@ source venv/bin/activate
 to deactivate user: deactivate
 
 python --version : returns system python
+
+---------------------------------
+## Flask-JWT-Extended
+
+1. Modify JWT <token-value> to Bearer <token-value> , incase you are using JWT-Extended.
+

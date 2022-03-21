@@ -1,0 +1,92 @@
+ Today: SQLAlchemy Integration with the Flask app, modifying the DataModels and updating the Resource Classes. Using Postman environment variables, storing JWT token to postman environment variable. Completed topic relating to the deployement of app on Heroku, Digital Ocean.Topic remaining of REST-API are API security, Flask-JWT-Extended.
+ 
+ Until Monday: Will finish Mongo 220, PySpark, Kafka and AirFlow.
+ 
+ Challenges:
+ API testing exposed some error in code, which resolved after some debugging.
+ 
+ 
+ ----------------------------
+ 
+ Heroku for hosting apps-
+ 
+ Web apps are hosted from a web server, Heroku provides us the web service to host our code of their server and it also allows other people to access it.
+ 
+ It can run Flask app.
+ 
+ Dyno <-- Heroku version of a server (It is a virtual machine)
+ uWSGI <-- python library on top of flask app to make our app available to others.
+ 
+configure logs and other things, Heroku app can run multiple Dynos, each Dyno runs 1 app, so many users can use your app at same time.
+
+Heroku use SSL encrytion, good security. Free Tier - 1 Dyno.
+
+----------------------
+Deploying on Heroku - Deploy with the github address of the app main branch.
+
+Some additional file required - like python version, dependency libraries, etc.
+1. requirements.txt file -
+Flask
+Flask-RESTful
+Flask-JWT
+Flask-SQLAlchemy
+uwsgi
+
+2. uwsgi.ini file -
+[uswgi]
+http-socket = :$(PORT)
+master = true
+die-on-term = true
+module = app.app
+memory-report = true
+
+3. Procfile (because dynos are of specific type) -
+web: uwsgi uwsgi.ini
+
+4. runtime.txt file -
+python-3.7.5
+
+
+After adding this 4 files, we have to commit changes to our git repo for Flask_app.
+Then start the app on heroku
+---------------------
+Heroku CLI can be can be logged in from local system. It is useful to troubleshoot heroku errors and also validate heroku app logs.
+
+Once, the app is running on Heroku (succesfully hosted on Heroku) we can test our app with the Postman API testing service. Test all the API's to make sure app is running well.
+---------------------
+We can use PostgreSQL add on to our Heroku app-
+PostgreSQL database service is a free hosted service on Heroku, so instead of using sqlite we can use PostgreSQL this can have performance improvements for our app.
+
+After adding PostgreSQL add-on, we configure the heroku environement variable for the connection string of PostgreSQL. We also modify app.py such that it whenever DATABASE_URI environment variable is not defined we test with sqlite db.
+
+we us os.dir.get(DATABASE_URI, 'sqlite2:///data.db') --refer to code repo
+
+for postgres also add one library - pcgos to requirements.txt file
+----------------------
+We can create new feature branches to our project and push the changes to the remote repo. The hosted Heroku app with automatically update itself, this is called automatic deploys.
+----------------------
+
+
+************************************
+DEPLOYING FLASK APP TO OUR OWN SERVER
+************************************
+
+Setting up DigitalOceanServer: Scalable way to host app, hardware config possible, 2 months free access.
+
+Droplets are the DigitalOcean Server.
+
+We can create droplet - our own digital ocean server, we can deploy multiple apps on same server or we can deploy on separate server.
+Select some server of good hardware configuration. Takes some time to start server
+Use email details to login to server.
+
+--? The next topics are specific for user custom requirements. 
+---------------------------------
+
+
+
+
+
+
+
+
+
