@@ -25,7 +25,6 @@ _user_parser.add_argument('password',
 # defines endpoint to register user
 class UserRegister(Resource):
     
-
     def post(self):
         data = _user_parser.parse_args()
         
@@ -47,6 +46,7 @@ class User(Resource):
             return {'message':'User not found'} , 404
         return user.json()
 
+    @jwt_required()
     @classmethod
     def delete(cls, user_id):
         user = UserModel.find_by_id(user_id)
@@ -75,27 +75,28 @@ class UserLogin(Resource):
         if user and safe_str_cmp(user.password, data['password']):
             access_token = create_access_token(identity=user.id, fresh= True)
             refresh_token = create_refresh_token(user.id)
+
             return {
                 'access_token':access_token,
                 'refresh_token': refresh_token
             }, 200
-        
         return {'message': 'Invalid credentials'}, 401
 
 class UserLogout(Resource):
 
-    @jwt_required
+    @jwt_required()
     def post(self):
-        jti = get_jti()
         user_id = get_jwt_identity()
-        BLACKLIST.add(jti)
+        BLACKLIST.add(user_id)
         return {"message": "User <id={}> successfully logged out.".format(user_id)}, 200
         
 # new resource - calling which gives us new refreshed token
 class RefreshToken(Resource):
+    # when is refresh token required - refresh token is longer lived, meaning it will work to idenfify user even after access token has 
+    # expired. 
 
-    @jwt_required(refresh = True)
-    def post(self):
+    @jwt_required(refresh = True)          # for this api call authorize the user with the refresh token
+    def post(self):                        # with this api call we are generating a new access token, which will be required, when user is doing a critical activity like deleting items
         current_user = get_jwt_identity()
         new_token = create_access_token(identity=current_user, fresh=False)
         
